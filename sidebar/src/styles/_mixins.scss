@@ -1,0 +1,109 @@
+
+/* Mixin functions used in the AI Assistant sidebar. */
+/* stylelint-disable at-rule-no-unknown */
+@import "../styles/dimensions";
+
+/*
+ * Reset the padding and margin of an element.
+ */
+@mixin reset-spacing {
+	padding: 0;
+	margin: 0;
+}
+
+/*
+ * Reset the outline, box shadow, and border of an element.
+ */
+@mixin no-outer-highlights {
+	outline: 0;
+	box-shadow: none;
+	border: none;
+}
+
+/*
+ * Set the font size and weight of an element.
+ *
+ * $size -------------- One of the presset font sizes, or a custom size.
+ * $weight ------------ The font weight, 400 by default.
+ * $line-height ------- The line height, optional.
+ */
+@mixin font-size( $size: 1rem, $weight: 400, $line-height: null ) {
+	// Add one of the predefined font sizes.
+	@if "xxs" == $size {
+		font-size: $font-size-xxs;
+		line-height: $line-height-xxs;
+	}
+
+	@else if "xs" == $size {
+		font-size: $font-size-xs;
+		line-height: $line-height-xs;
+	}
+
+	@else if "sm" == $size {
+		font-size: $font-size-sm;
+		line-height: $line-height-sm;
+	}
+
+	@else if "md" == $size {
+		font-size: $font-size-md;
+		line-height: $line-height-md;
+	}
+
+	@else if "lg" == $size {
+		font-size: $font-size-lg;
+		line-height: $line-height-lg;
+	}
+
+	@else if "xl" == $size {
+		font-size: $font-size-xl;
+		line-height: $line-height-xl;
+	}
+
+	@else {
+		font-size: $size;
+		line-height: $size;
+	}
+
+	// Add the font weight, reset the text-transform, and override the line height if required.
+	font-weight: $weight;
+	text-transform: none;
+	letter-spacing: normal;
+
+	@if $line-height {
+		line-height: $line-height;
+	}
+}
+
+/*
+ * Set the color and background color of an element.
+ *
+ * $color -------------- The text color.
+ * $background --------- The background color or property.
+ */
+@mixin color( $color: $palette-text-primary, $background: transparent ) {
+	color: $color;
+	background: $background;
+}
+
+/*
+ * Set the transition of an element.
+ *
+ * $properies ----------- The list of properties to transition.
+ * $duration ------------ The duration of the transition.
+ * $delay --------------- The delay of the transition.
+ * $timing-function ----- The timing function of the transition.
+ */
+@mixin transition( $properies: all, $duration: 150ms, $delay: 0s, $timing-function: ease-in-out ) {
+	// Add each property to a comma separate list of transitions.
+	$transitions: ();
+
+	@each $property in $properies {
+		$transitions: append( ( $transitions ), $property $duration $delay $timing-function, $separator: comma );
+	}
+
+	// Add the transition.
+	-webkit-transition: $transitions;
+	-moz-transition: $transitions;
+	-o-transition: $transitions;
+	transition: $transitions;
+}

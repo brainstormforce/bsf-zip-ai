@@ -1,0 +1,31 @@
+/* Color variables used in the AI Assistant sidebar. */
+
+$palette-primary: #5a03ef;
+$palette-secondary: #4302b3; // The $palette-primary color, but 25% darker.
+$palette-zip: #ff580e;
+$palette-error-background: #fef2f2; // a.k.a. Red 50.
+$palette-error: #ef4444; // a.k.a. Red 500.
+$palette-error-text: #b91c1c; // a.k.a. Red 700.
+$palette-warning-background: #fffbeb; // a.k.a. Amber 50.
+$palette-warning: #f59e0b; // a.k.a. Amber 500.
+$palette-warning-text: #b45309; // a.k.a. Amber 700.
+$palette-sidebar-background: #fff;
+$palette-chat-background: #fff;
+$palette-chat-scrollbar: #b0b9c6; // The $palette-label-icon color, but 50% lighter.
+$palette-chat-border: #e6e7e9;
+$palette-chat-button: #f8fafc;
+$palette-chat-bubble-human-color: #f2f5f7;
+$palette-chat-bubble-assistant-color: transparent;
+$palette-chat-code-title: #1f2937; // a.k.a. Gray 800.
+$palette-chat-code-body: #374151; // a.k.a. Gray 700.
+$palette-label-background: #fff; // The $palette-chat-background color, but 2.5% darker and 50% saturated.
+$palette-label-border: #e6e7e9;
+$palette-label-icon: #64748b; // a.k.a. Slate 500.
+$palette-text-heading: #1e293b;
+$palette-text-body: #50575e;
+$palette-text-placeholder: #aaa;
+$palette-text-help: #959aa3;
+
+$tailwind-green-500: #22c55e;
+$tailwind-amber-500: #f59e0b;
+$tailwind-red-500: #ef4444;

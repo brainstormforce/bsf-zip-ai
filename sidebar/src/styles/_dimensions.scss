@@ -1,0 +1,86 @@
+/* Dimension variables used in the AI Assistant sidebar. */
+/* Variables are organized by size, width, height, margin, padding, gap, etc. */
+/* Further organization is done based on when the elemenet appears in the DOM. */
+
+// Common dimensions.
+$size-full: 100%;
+$width-screen: 100vw;
+$height-screen: 100vh;
+$max-border-radius: 9999px;
+
+// Z-index values.
+$z-index-10x9: 9999999999;
+$z-index-7x9: 9999999;
+$z-index-header: 10;
+$z-index-chat-window: 9;
+$z-index-input-area: 8;
+$z-index-disclaimer: 7;
+
+// Font Sizes and Line Heights.
+$font-size-xxs: 0.625rem; /* 10px */
+$line-height-xxs: 0.75rem; /* 12px */
+$font-size-xs: 0.75rem; /* 12px */
+$line-height-xs: 1rem; /* 16px */
+$font-size-sm: 0.875rem; /* 14px */
+$line-height-sm: 1.25rem; /* 20px */
+$font-size-md: 1rem; /* 16px */
+$line-height-md: 1.5rem; /* 24px */
+$font-size-lg: 1.125rem; /* 18px */
+$line-height-lg: 1.75rem; /* 28px */
+$font-size-xl: 1.25rem; /* 20px */
+$line-height-xl: 1.75rem; /* 28px */
+
+// Sidebar specific dimensions.
+$width-sidebar: 450px;
+$height-sidebar-header: 48px;
+$padding-sidebar-header: 12px;
+
+// Chat window specific dimensions.
+$padding-chat-window: 16px;
+$padding-chat-window-placeholder: 32px;
+$padding-chat-window-placeholder-grid: 8px 0;
+$padding-chat-window-placeholder-button: 10px 20px;
+$gap-chat-window: 8px;
+$gap-chat-window-placeholder: 16px;
+$gap-chat-window-placeholder-logos: 12px;
+$gap-chat-window-placeholder-grid: 24px;
+$gap-chat-window-placeholder-grid-item: 8px;
+$gap-chat-window-placeholder-button: 8px;
+
+// Chat bubble specific dimensions.
+$width-chat-bubble-code-header-button: 20px;
+$width-chat-bubble-code-header-button-icon: 14px;
+$width-chat-bubble-pagination-button: 24px;
+$width-chat-bubble-pagination-button-icon: 16px;
+$padding-chat-bubble: 12px 16px;
+$padding-chat-bubble-code: 8px 12px;
+$padding-chat-bubble-code-header-button: 2px;
+$padding-chat-bubble-code-content: 12px;
+$padding-chat-bubble-edit-mode-input: 0;
+$padding-chat-bubble-edit-mode-notice: 8px;
+$padding-chat-bubble-edit-mode-actions: 4px 12px;
+$padding-chat-bubble-button: 8px 14px;
+$gap-chat-bubble: 6px;
+$gap-chat-bubble-code-header: 8px;
+$gap-chat-bubble-edit-mode: 8px;
+$gap-chat-bubble-edit-mode-footer: 16px;
+$gap-chat-bubble-edit-mode-notice: 6px;
+$gap-chat-bubble-edit-mode-actions: 8px;
+
+// Chat filter specific dimensions.
+$padding-prompts: 16px;
+$padding-prompts-button: 12px;
+$padding-filters-button: 6px 10px;
+$gap-prompts: 12px;
+$gap-filters-button: 12px;
+
+// Chat user interaction specific dimensions.
+$width-interactions: 18px;
+$width-interactions-button: 24px;
+$width-interactions-input-button: 32px;
+$padding-interactions: 16px;
+$padding-interactions-buttons: 4px;
+$padding-interactions-input: 12px;
+$padding-interactions-input-button: 8px;
+$gap-interactions: 8px;
+$gap-interactions-footer: 12px;

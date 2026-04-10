@@ -1,0 +1,68 @@
+/* stylelint-disable at-rule-no-unknown */
+@import "styles/colors";
+@import "styles/mixins";
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Courier+Prime:wght@400&display=swap");
+
+// All Zip AI Sidebar Editor CSS.
+.zip-ai {
+
+	// The block menu icon styling.
+	&-toolbar {
+		border: 0;
+		border-radius: 0;
+		border-right: 1px solid #1e1e1e;
+
+		// The button inside the block-settings group.
+		.components-toolbar-button {
+			border-radius: 0;
+
+			// Removing the border that appears on focus.
+			&:focus::before {
+				box-shadow: none;
+				outline: none;
+			}
+
+			// The icon inside the button.
+			svg {
+				width: 72px;
+				stroke: currentColor;
+				stroke-width: 1.4;
+				fill: none;
+			}
+
+			// The toolbar button icon width.
+			&.zip-ai-toolbar-button.is-compact.has-icon:not( .has-text ) {
+				width: unset;
+			}
+		}
+	}
+}
+
+// Hide the editor sidebar for the AI Assistant.
+.interface-interface-skeleton__sidebar:has( > div > div.zip-ai-sidebar ) {
+	display: none;
+}
+
+.zip-ai-popover {
+	&[data-wp-component="Popover"] {
+		z-index: 100000000;
+		margin-top: 1px;
+	}
+	.components-popover__content {
+		border: 1px solid #1e1e1e;
+		box-shadow: none;
+		width: 240px;
+
+		.components-button {
+			padding: 10px;
+
+			&:first-child {
+				margin-top: 10px;
+			}
+
+			&:last-child {
+				margin-bottom: 10px;
+			}
+		}
+	}
+}

@@ -1,0 +1,199 @@
+/* Animations used in the AI Assistant sidebar. */
+
+@import "dimensions";
+@import "colors";
+
+// Animation to fade-in the sidebar.
+@keyframes fadeIntoView {
+
+	0% {
+		opacity: 0;
+	}
+
+	100% {
+		opacity: 1;
+	}
+}
+
+// Animation to fade-out the sidebar.
+@keyframes fadeOutOfView {
+
+	0% {
+		opacity: 1;
+	}
+
+	100% {
+		opacity: 0;
+	}
+}
+
+// Animation to slide-in the sidebar from the right.
+@keyframes slideInFromRight {
+
+	0% {
+		right: -$width-sidebar;
+	}
+
+	100% {
+		right: 0;
+	}
+}
+
+// Animation to slide-out the sidebar to the right.
+@keyframes slideOutToRight {
+
+	0% {
+		right: 0;
+	}
+
+	100% {
+		right: -$width-sidebar;
+	}
+}
+
+// Animation to pop-in a chat bubble.
+@keyframes chatBubble {
+
+	0% {
+		opacity: 0;
+		top: 25px;
+	}
+
+	90% {
+		opacity: 1;
+		top: -5px;
+	}
+
+	100% {
+		top: 0;
+	}
+}
+
+// Animation to make the loader dot(s) jump.
+@keyframes jump {
+	0% {
+		top: 0;
+		opacity: 0.5;
+		background-color: $palette-text-placeholder;
+	}
+
+	40% {
+		top: 0;
+		opacity: 0.5;
+		background-color: $palette-text-placeholder;
+	}
+
+	50% {
+		top: -4px;
+		opacity: 1;
+		background-color: $palette-primary;
+	}
+
+	55% {
+		background-color: $palette-primary;
+	}
+
+	60% {
+		top: 2px;
+		opacity: 0.5;
+		background-color: $palette-text-placeholder;
+	}
+
+	65% {
+		top: 0;
+		opacity: 0.5;
+		background-color: $palette-text-placeholder;
+	}
+
+	100% {
+		top: 0;
+		opacity: 0.5;
+		background-color: $palette-text-placeholder;
+	}
+}
+
+// Animation to blink, similar to how the input cursor blinks.
+@keyframes blink {
+
+	0% {
+		opacity: 1;
+	}
+
+	49% {
+		opacity: 1;
+	}
+
+	50% {
+		opacity: 0;
+	}
+
+	99% {
+		opacity: 0;
+	}
+
+	100% {
+		opacity: 1;
+	}
+}
+
+// Animation to slide-in the sidebar from the right.
+@keyframes slideInActions {
+
+	0% {
+		right: -8px;
+		opacity: 0;
+	}
+
+	100% {
+		right: 0;
+		opacity: 1;
+	}
+}
+
+// Animation to open the user icon popup.
+@keyframes openUserIconPopup {
+
+	0% {
+		opacity: 0;
+		top: -16px;
+	}
+
+	90% {
+		top: 4px;
+	}
+
+	100% {
+		opacity: 1;
+		top: 0;
+	}
+}
+
+// Animation to close the user icon popup.
+@keyframes closeUserIconPopup {
+
+	0% {
+		opacity: 1;
+		top: 0;
+	}
+
+	90% {
+		top: -16px;
+	}
+
+	100% {
+		opacity: 0;
+		top: -16px;
+	}
+}
+
+// Animation to go from translucent to opaque.
+@keyframes translucentToOpaque {
+
+	0% {
+		opacity: 0.5;
+	}
+
+	100% {
+		opacity: 1;
+	}
+}

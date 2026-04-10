@@ -1,0 +1,54 @@
+// This style file contains all the CSS that alters elements outside the React App.
+
+// Remove the padding from the body content
+#wpbody-content {
+	padding: 0 !important;
+
+	// Disable all notices and errors.
+	.notice,
+	.error {
+		display: none !important;
+	}
+}
+
+// Remove the content area padding and margin.
+#wpcontent {
+	padding: 0;
+}
+
+// Update the background color.
+#wpwrap {
+	background-color: $slate-100;
+}
+
+
+// The Zip AI Menu Components Styling.
+.zip-ai {
+
+	// The Zip AI Dashboard App.
+	&__dashboard-app {
+		font-family: var( --heading-font-family );
+		left: -20px;
+		position: relative;
+		width: calc( 100% + 20px );
+
+		// The Zip AI Dashboard App Wrapper.
+		&--wrapper {
+			box-sizing: border-box;
+
+			// Make all elements adopt the border-box sizing.
+			* {
+				box-sizing: border-box;
+			}
+
+			// Remove the focus outline from all interactive elements.
+			a:focus,
+			button:focus,
+			input:focus {
+				box-shadow: none;
+				outline: none;
+			}
+
+		}
+	}
+}

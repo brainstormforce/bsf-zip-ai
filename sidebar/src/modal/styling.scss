@@ -1,0 +1,1853 @@
+@charset "UTF-8"; // Charset is added to render the Unicode characters.
+/* stylelint-disable at-rule-no-unknown */
+
+@import "../styles/animations";
+@import "../styles/colors";
+@import "../styles/dimensions";
+@import "../styles/mixins";
+
+// Variables specifically for this file, not required globally.
+$textarea-border-bottom: $width-interactions-input-button + ($padding-interactions-input * 2);
+
+// All the Zip AI Sidebar CSS.
+.zip-ai {
+	// The Sidebar styling.
+	&-sidebar {
+		cursor: auto;
+		position: absolute;
+		top: 0;
+		right: 0;
+		display: flex;
+		flex-direction: column;
+		width: $width-sidebar;
+		height: $height-screen;
+		border-radius: 0;
+		box-shadow: -16px 0 80px -24px rgba( 0, 0, 0, 0.16 );
+		overflow: visible;
+		animation: slideInFromRight 100ms 50ms 1 ease-in-out both;
+
+		@include color($palette-text-body, $palette-sidebar-background);
+
+		// The closed state of the sidebar.
+		&.close-it {
+			animation: slideOutToRight 150ms 0s 1 ease-in-out forwards;
+		}
+
+		// Everthing inside the sidebar.
+		&,
+		*:not( .dashicons ):not( code ) {
+			font-family: Inter, sans-serif;
+			box-sizing: border-box;
+		}
+
+		// The sidebar overlay.
+		&-overlay {
+			cursor: pointer;
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: $width-screen;
+			height: $height-screen;
+			background-color: rgba( 17, 24, 39, 0.05 );
+			z-index: $z-index-7x9;
+			animation: fadeIntoView 150ms 0s 1 ease-in-out none;
+
+			// The closed state of the sidebar.
+			&.close-it {
+				animation: fadeOutOfView 100ms 50ms 1 ease-in-out forwards;
+			}
+		}
+
+		// The header styling.
+		&__header {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			position: absolute;
+			top: 0;
+			z-index: $z-index-header;
+			width: $size-full;
+			height: $height-sidebar-header;
+			padding: $padding-sidebar-header;
+			background-color: rgba( 255, 255, 255, 0.75 );
+			backdrop-filter: blur( 8px );
+			padding-left: 40px;
+
+			// The title of the sidebar. Expanded for specificity.
+			h2.zip-ai-sidebar__header--title {
+
+				@include reset-spacing;
+				@include font-size("lg", 600);
+				@include color($palette-text-heading);
+			}
+
+			// The close button in the header.
+			button.zip-ai-sidebar__header--close {
+				position: absolute;
+				top: 0;
+				left: 0;
+				height: $height-sidebar-header;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				aspect-ratio: 1/1;
+				cursor: pointer;
+
+				@include reset-spacing;
+				@include no-outer-highlights;
+				@include color($palette-text-heading);
+
+				// The hover state of the close button.
+				&:hover,
+				&:focus-visible {
+
+					@include no-outer-highlights;
+					@include color($palette-text-body);
+				}
+
+				// The dashicon inside the close button.
+				.dashicons {
+					width: 1.25rem;
+					height: 1.25rem;
+
+					@include font-size("xl", 400, 1.25rem);
+				}
+			}
+
+			// The user initials in the header.
+			&--user {
+				// The wrapper of the user initials in the header.
+				&-wrapper {
+					position: relative;
+					top: 0;
+					right: 0;
+					height: 48px;
+					padding: 12px;
+					display: flex;
+					gap: 10px;
+					// The icon or initials display area.
+					button.zip-ai-sidebar__header--user-icon {
+						display: flex;
+						align-items: center;
+						justify-content: center;
+						height: $size-full;
+						aspect-ratio: 1/1;
+						border-radius: $max-border-radius;
+						cursor: pointer;
+
+						@include reset-spacing;
+						@include no-outer-highlights;
+						@include font-size("xxs", 600);
+						@include color(#fff, $palette-label-icon);
+						@include transition(transform);
+
+						&:hover,
+						&:active,
+						&:focus-visible {
+							transform: scale( 1.1 );
+
+							@include no-outer-highlights;
+							@include color(#fff, $palette-label-icon);
+						}
+					}
+				}
+				&-credit-wrapper {
+					display: flex;
+					flex-direction: column;
+					right: 4px;
+					position: relative;
+					gap: 2px;
+				}
+
+				&-credit-details {
+					text-align: end;
+					font-size: 13px;
+
+					&-used {
+						font-weight: 700;
+						font-size: 15px;
+						line-height: 14px;
+						text-align: right;
+						color: #030712;
+					}
+
+					&-used-high {
+						font-weight: 700;
+						font-size: 14px;
+						line-height: 14px;
+						text-align: right;
+						color: #ff4545;
+					}
+
+					&-total {
+						font-weight: 400;
+						font-size: 13px;
+						line-height: 14px;
+						text-align: right;
+						color: #50575e;
+					}
+
+					&-loading-spinner {
+						width: 20px;
+						height: 20px;
+					}
+				}
+
+				// Added styles for displaying credits directly in the top bar.
+				&-credit {
+					display: flex;
+					align-items: center;
+					gap: 8px;
+					font-size: 14px;
+					color: $palette-text-body;
+				}
+
+				// The user icon popup.
+				&-popup {
+					position: absolute;
+					top: 100%;
+					right: 0;
+					width: 100%;
+					padding: 8px 16px 16px;
+
+					@include transition(max-width);
+
+					// The header area of the icon popup.
+					&-header {
+						width: 100%;
+						display: flex;
+						align-items: flex-start;
+						justify-content: space-between;
+					}
+
+					// The content area of the user icon popup.
+					&-content {
+						position: relative;
+						background-color: $palette-sidebar-background;
+						padding: 16px;
+						width: 100%;
+						border-radius: 6px;
+						box-shadow: 0 8px 48px -18px rgba( 0, 0, 0, 0.25 );
+						animation: openUserIconPopup 100ms ease-out 0ms 1 forwards;
+
+						// The closed popup.
+						&-closed {
+							animation: closeUserIconPopup 100ms ease-out 0ms 1 forwards;
+						}
+					}
+
+					// The title in the popup.
+					&-title {
+
+						@include reset-spacing;
+						@include font-size("lg", 600);
+						@include color($palette-text-heading);
+					}
+
+					// The details in the popup.
+					&-details {
+
+						@include reset-spacing;
+						@include color($palette-text-body);
+						@include font-size("sm");
+					}
+
+					// The link in the popup.
+					&-link {
+						text-decoration: none;
+						padding: 4px;
+						display: flex;
+						align-items: center;
+						gap: 4px;
+
+						@include reset-spacing;
+						@include color($palette-primary);
+						@include font-size("xs");
+
+						// The hover, active, and focus states of the popup link.
+						&:hover,
+						&:focus,
+						&:focus-visible {
+
+							@include color($palette-secondary);
+						}
+					}
+
+					// The link in the popup.
+					&-inline-link {
+						text-decoration: none;
+
+						@include reset-spacing;
+						@include color($palette-primary);
+
+						// The hover, active, and focus states of the popup link.
+						&:hover,
+						&:focus,
+						&:focus-visible {
+
+							@include color($palette-secondary);
+						}
+					}
+
+					// The button in the popup.
+					&-button {
+						cursor: pointer;
+						width: 100%;
+						display: flex;
+						align-items: center;
+						justify-content: center;
+						gap: $gap-chat-window-placeholder-button;
+						padding: $padding-chat-window-placeholder-button;
+						border-radius: 4px;
+						border: 1px solid $palette-primary;
+						outline: 0;
+						box-shadow: none;
+
+						@include font-size("sm");
+						@include color(#fff, $palette-primary);
+						@include transition(background-color opacity, 100ms);
+
+						&:hover,
+						&:focus-visible {
+							border: 1px solid $palette-primary;
+							outline: 0;
+							box-shadow: none;
+
+							@include color(#fff, $palette-secondary);
+						}
+
+						// The disabled button styling.
+						&:disabled {
+							opacity: 0.5;
+							cursor: not-allowed;
+						}
+					}
+				}
+			}
+
+			// The logo of the sidebar.
+			.components-modal__icon-container {
+				display: flex;
+				align-items: center;
+				margin-top: 0;
+				margin-right: 12px;
+
+				// The SVG in the logo container.
+				svg {
+					height: 32px;
+				}
+			}
+		}
+
+		// The notification bar.
+		&__notification {
+			position: relative;
+			height: 40px;
+			max-height: 0;
+			overflow: hidden;
+			box-shadow: 0 1px $palette-chat-border;
+
+			@include color(#fff, $palette-error);
+			@include transition(max-height, 250ms);
+
+			&--visible {
+				max-height: 40px;
+			}
+
+			&--content {
+				position: absolute;
+				bottom: 0;
+				height: 40px;
+				width: $size-full;
+				padding: 0 20px;
+				display: flex;
+				flex-direction: row;
+				justify-content: space-between;
+				align-items: center;
+				letter-spacing: 0.1px;
+
+				@include font-size("sm", 500);
+			}
+
+			// The close button in the notification bar.
+			.components-button {
+				width: 24px;
+				height: 24px;
+				padding: 4px;
+				position: absolute;
+				top: 8px;
+				right: 8px;
+
+				@include no-outer-highlights;
+
+				// The close button icon.
+				svg {
+					width: 20px;
+					height: 20px;
+
+					@include color(#fff);
+				}
+			}
+		}
+
+		// The chat window.
+		&__chat-window {
+			position: relative;
+			flex: 1;
+			display: flex;
+			flex-direction: column;
+			justify-content: flex-start;
+			align-items: center;
+			padding: 60px $padding-chat-window $padding-chat-window;
+			gap: $gap-chat-window;
+			overflow-y: scroll;
+			z-index: $z-index-chat-window;
+
+			@include color($palette-text-body, $palette-chat-background);
+
+			// Firefox scrollbar styles.
+			scrollbar-width: none;
+
+			// Chrome, Edge and Safari scrollbar dimensions.
+			&::-webkit-scrollbar {
+				width: 0;
+				background: transparent;
+			}
+
+			// Focus border styling.
+			&:focus-visible {
+				outline: 0;
+				box-shadow: none;
+				border-color: $palette-chat-scrollbar;
+			}
+
+			// The placeholder styling.
+			&::placeholder {
+
+				@include color($palette-text-placeholder);
+			}
+
+			// The placeholder for the chat window.
+			&--placeholder {
+				flex: 1;
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				align-items: center;
+				padding: $padding-chat-window-placeholder;
+				gap: $gap-chat-window-placeholder;
+				width: $size-full;
+
+				// The logo wrapper in the placeholder.
+				&-logos {
+					display: flex;
+					justify-content: center;
+					align-items: center;
+					gap: $gap-chat-window-placeholder-logos;
+
+					// The first child of the logo wrapper - which could be the plugin logo or the library logo.
+					& > :first-child {
+						width: 32px;
+						height: 32px;
+					}
+				}
+
+				// The grid of content in the placeholder.
+				&-grid {
+					display: grid;
+					grid-template-columns: repeat( 3, 1fr );
+					grid-auto-rows: 1fr;
+					gap: $gap-chat-window-placeholder-grid;
+					padding: $padding-chat-window-placeholder-grid;
+					width: $size-full;
+
+					// The grid item.
+					&-item {
+						display: flex;
+						flex-direction: column;
+						justify-content: space-between;
+						align-items: center;
+						gap: $gap-chat-window-placeholder-grid-item;
+						width: $size-full;
+						height: $size-full;
+
+						// The grid item heading.
+						&-heading {
+							width: $size-full;
+							text-align: center;
+
+							@include font-size("xs", 500);
+						}
+					}
+				}
+
+				// The button in the placeholder.
+				&-button {
+					cursor: pointer;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					gap: $gap-chat-window-placeholder-button;
+					padding: $padding-chat-window-placeholder-button;
+					border-radius: 4px;
+					border: 1px solid $palette-primary;
+					outline: 0;
+					box-shadow: none;
+
+					@include font-size("sm");
+					@include color(#fff, $palette-primary);
+					@include transition(background-color opacity, 100ms);
+
+					&:hover,
+					&:focus-visible {
+						border: 1px solid $palette-primary;
+						outline: 0;
+						box-shadow: none;
+
+						@include color(#fff, $palette-secondary);
+					}
+
+					// The disabled button styling.
+					&:disabled {
+						opacity: 0.5;
+						cursor: not-allowed;
+					}
+				}
+
+				// The heading in the placeholder.
+				&-heading {
+					text-align: center;
+
+					@include reset-spacing;
+					@include color($palette-text-heading);
+					@include font-size("md", 700);
+				}
+
+				// The subheading in the placeholder.
+				&-subheading {
+					text-align: center;
+
+					@include reset-spacing;
+					@include color($palette-text-body);
+					@include font-size("sm");
+				}
+
+				// The padded content in the placeholder.
+				&-padded-content {
+					margin: 0;
+					padding: calc( $gap-chat-window / 2 );
+					text-align: center;
+
+					@include font-size("sm");
+				}
+
+				// The link in the placeholder.
+				&-link {
+					text-decoration: none;
+					border-bottom: 1px solid $palette-chat-scrollbar;
+
+					@include font-size("sm");
+					@include color($palette-text-help);
+					@include transition(border-bottom);
+
+					// The link hover and focus state.
+					&:hover,
+					&:focus-visible {
+						outline: 0;
+						border: 0;
+						box-shadow: none;
+						border-bottom: 1px solid $palette-primary;
+
+						@include color($palette-text-help);
+					}
+				}
+			}
+
+			// The placeholder footer area.
+			&--footer {
+				width: $size-full;
+				text-align: center;
+
+				@include font-size("xs");
+				@include color($palette-text-placeholder);
+
+				// The button that looks like part of the footer text, with an underline.
+				&-inline-action {
+					text-decoration: underline;
+					cursor: pointer;
+					-webkit-appearance: none;
+					-moz-appearance: none;
+					appearance: none;
+
+					@include no-outer-highlights;
+					@include reset-spacing;
+					@include color(inherit);
+					@include transition(color);
+
+					&:hover,
+					&:focus-visible {
+
+						@include no-outer-highlights;
+						@include color($palette-text-body);
+					}
+				}
+			}
+
+			// The scroll to bottom button of the chat window.
+			&--scroll-button {
+				position: fixed;
+				cursor: pointer;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				box-sizing: border-box;
+				width: $width-interactions-input-button;
+				height: $width-interactions-input-button;
+				margin: 0;
+				padding: $padding-interactions-input-button;
+				border-radius: 4px;
+				border: 1px solid $palette-chat-border;
+				outline: 0;
+				box-shadow: none;
+				transform: translateY( 0 );
+				opacity: 0;
+				pointer-events: none;
+
+				@include color($palette-text-body, #fff);
+				@include transition(transform opacity color background-color);
+
+				// The visible scroll button.
+				&.scroll-button-is-visible {
+					transform: translateY( -10px );
+					opacity: 1;
+					pointer-events: initial;
+
+					// The hover state of the visible button.
+					&:hover,
+					&:focus-visible {
+
+						@include no-outer-highlights;
+						@include color(#fff, $palette-primary);
+					}
+				}
+			}
+		}
+
+		// The chat bubbles inside the chat window. The SCSS definition does not use the common &__chat- from above for readability.
+		&__chat-bubble {
+			position: relative;
+			width: $size-full;
+			display: flex;
+			animation: chatBubble 150ms 0s 1 ease none;
+
+			// The hover styling of the chat bubble.
+			&:hover {
+				// The chat bubble header interactions that are visible on hover.
+				.zip-ai-sidebar__chat-bubble--interaction-on-hover {
+					opacity: 1;
+				}
+			}
+
+			// The last chat bubble. Second last element, as the scroll to bottom button is last.
+			&:nth-last-child( 2 ) {
+				// The message format of the last chiild.
+				.zip-ai-sidebar__chat-bubble--message {
+					border-radius: 22px 4px 22px 22px !important; // The last message will always have a border radius - fixes any edge case glitches with the user messages, and does not affect the UI of the AI messages.
+				}
+			}
+
+			// The chat bubble message from the user.
+			&--from-human,
+			&--from-content {
+				flex-direction: row-reverse;
+				justify-content: flex-start;
+				align-items: center;
+				gap: 8px;
+
+				// Chat bubbles that appear before another human message.
+				&.not-last-message {
+					// The chat bubble message area for user messages ( i.e. The actual bubble ).
+					.zip-ai-sidebar__chat-bubble--message,
+					.zip-ai-sidebar__chat-editor {
+						border-radius: 22px 4px 4px 22px;
+					}
+				}
+
+				// The chat bubble message area for user messages ( i.e. The actual bubble ).
+				.zip-ai-sidebar__chat-bubble--message,
+				.zip-ai-sidebar__chat-editor {
+					background-color: $palette-chat-bubble-human-color;
+					border-radius: 22px 4px 22px 22px;
+					padding: $padding-chat-bubble;
+				}
+
+				// The width of the user's message bubble.
+				.zip-ai-sidebar__chat-bubble--message {
+					max-width: 80%;
+				}
+
+				// The width of the chat editor bubble.
+				.zip-ai-sidebar__chat-editor {
+					width: 100%;
+				}
+
+				// The first shortcut tooltip for the first shortcut in the first interaction of a user message like the content message.
+				.zip-ai-sidebar__chat-bubble--interaction:first-child .zip-ai-sidebar__chat-bubble--shortcut:first-child .zip-ai-sidebar__tooltip.zip-ai-sidebar__tooltip-positioned--bottom {
+					// Translate it to align with the left of the button, then up according to the line height and the padding.
+					transform: translate( calc( 50% - $line-height-xs ), calc( $line-height-xs + (6px * 2) ) );
+				}
+			}
+
+			&--from-content {
+				flex-direction: column;
+				align-items: flex-end;
+
+				// The last shortcut tooltip for the last shortcut in the last interaction of a content message.
+				.zip-ai-sidebar__chat-bubble--interaction:last-child .zip-ai-sidebar__chat-bubble--shortcut:last-child .zip-ai-sidebar__tooltip.zip-ai-sidebar__tooltip-positioned--bottom {
+					// Translate it to align with the right of the button, then up according to the line height and the padding.
+					transform: translate( calc( $line-height-xs - 50% ), calc( $line-height-xs + (6px * 2) ) );
+				}
+			}
+
+			// The chat bubble from the assistant.
+			&--from-assistant {
+				flex-direction: column;
+				background: #fff;
+				margin-top: $gap-chat-window;
+				gap: $gap-chat-bubble;
+
+				&.animated-chat-bubble {
+					animation: chatBubble 150ms 150ms 1 ease both;
+				}
+
+				// The icon for hte assistant messages.
+				.zip-ai-sidebar__chat-bubble--icon {
+					background-color: $palette-primary;
+					border-radius: 100%;
+				}
+
+				// Add animations to the AI assistant messages.
+				.zip-ai-sidebar__chat-bubble--message {
+					position: relative;
+					animation: chatBubble 150ms 0ms 1 ease both;
+				}
+
+				// The first shortcut tooltip for the first shortcut in the first interaction of an AI message.
+				.zip-ai-sidebar__chat-bubble--interaction:first-child .zip-ai-sidebar__chat-bubble--shortcut:first-child .zip-ai-sidebar__tooltip.zip-ai-sidebar__tooltip-positioned--top {
+					// Translate it to align with the left of the button, then up according to the line height and the padding.
+					transform: translate( calc( 50% - $line-height-xs ), calc( 0px - $line-height-xs - (6px * 2) ) );
+				}
+
+				// The last shortcut tooltip for the last shortcut in the last interaction of an AI message.
+				.zip-ai-sidebar__chat-bubble--interaction:last-child .zip-ai-sidebar__chat-bubble--shortcut:last-child .zip-ai-sidebar__tooltip.zip-ai-sidebar__tooltip-positioned--top {
+					// Translate it to align with the right of the button, then up according to the line height and the padding.
+					transform: translate( calc( $line-height-xs - 50% ), calc( 0px - $line-height-xs - (6px * 2) ) );
+				}
+			}
+
+			// The chat bubble footer area for the actions.
+			&--footer {
+				display: flex;
+				justify-content: space-between;
+			}
+
+			// The chat bubble slide-in actions area.
+			&--slidein-actions {
+				position: relative;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				animation: slideInActions 150ms 150ms 1 ease-in-out both;
+			}
+
+			// The wrapper of the chat actions
+			&--wrapper {
+				width: 100%;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+			}
+
+			// The chat bubble username.
+			&--user {
+				flex: 1;
+
+				@include reset-spacing;
+				@include font-size("sm", 600);
+				@include color($palette-text-body);
+			}
+
+			// The chat bubble interactions.
+			&--interaction {
+				display: flex;
+				justify-content: flex-end;
+				gap: $gap-interactions;
+				border-radius: 4px;
+
+				// The chat bubble interactions that are visible on hover.
+				&-on-hover {
+					opacity: 0;
+
+					@include transition(opacity);
+
+					&:focus-within {
+						opacity: 1;
+					}
+				}
+
+				// The divider between the chat bubble interactions.
+				&-divider {
+					width: 1px;
+					background-color: $palette-chat-border;
+				}
+
+				// The dropdown specific custom element stylings.
+				&-dropdown {
+
+					@include color($palette-label-icon, transparent);
+
+					// The disabled dropdown styling.
+					&-disabled {
+						cursor: progress;
+					}
+
+					// The dropdown title.
+					&-title {
+						padding: 6px 8px;
+
+						@include font-size("xs", 600);
+					}
+
+					// The dropdown search minic field.
+					&-search {
+						padding: 6px 8px;
+						margin: 0 4px;
+						border-radius: 4px;
+						outline: 1px solid $palette-label-icon;
+						outline-offset: -1px;
+
+						@include font-size("xs");
+
+						// The input value mimic.
+						&-value {
+							color: $palette-text-body;
+
+							@include font-size("xs");
+						}
+
+						// The blinking cursor mimic.
+						&-cursor {
+							width: 0;
+							border-right: 1px solid $palette-label-icon;
+							animation: blink 1s infinite;
+						}
+
+						// The placholder mimic.
+						&-placeholder {
+							color: $palette-text-placeholder;
+
+							@include font-size("xs");
+						}
+					}
+				}
+
+				// The chat bubble header interaction buttons.
+				button {
+					width: $width-interactions-button;
+					height: $width-interactions-button;
+					margin: 0;
+					padding: $padding-interactions-buttons;
+					cursor: pointer;
+
+					@include no-outer-highlights;
+					@include color($palette-label-icon, transparent);
+					@include transition(background-color);
+
+					// Buttons that do not have an icon.
+					&.zip-ai-sidebar__chat-bubble--shortcut-no-icon {
+						width: auto;
+						padding: $padding-interactions-buttons (2 * $padding-interactions-buttons);
+
+						@include font-size("sm");
+					}
+
+					// The chat bubble header interaction button icon.
+					svg {
+						width: $width-interactions;
+						height: $width-interactions;
+
+						@include color(inherit);
+						@include transition(color);
+					}
+
+					// The chat bubble header interaction button icon hover state.
+					&:hover,
+					&:focus-visible {
+						background-color: $palette-chat-bubble-human-color;
+
+						@include no-outer-highlights;
+					}
+
+					// The chat bubble header interaction button icon disabled state.
+					&:disabled {
+						cursor: progress;
+
+						svg {
+
+							@include color($palette-chat-border !important);
+						}
+					}
+				}
+			}
+
+			// The chat bubble message.
+			&--message {
+				white-space: pre-wrap;
+				overflow-wrap: anywhere;
+
+				@include reset-spacing;
+				@include font-size("sm");
+				@include color($palette-text-body);
+			}
+
+			// The inline code formatting for the chat bubble message.
+			&--code-inline {
+				vertical-align: middle;
+				display: inline-flex;
+				align-items: center;
+				margin: 0;
+				padding: 2px 4px;
+				border-radius: 4px;
+
+				@include font-size("sm");
+				@include color(#fff, $palette-chat-code-body);
+
+				// The code block content code tag.
+				code {
+					font-family: "Courier Prime", "Courier New", Courier, monospace;
+
+					@include reset-spacing;
+					@include font-size(0.8rem, 400, 0.75rem);
+					@include color(#fff);
+				}
+			}
+
+			// The code block formatting for the chat bubble message.
+			&--code-block {
+				white-space: pre-wrap;
+
+				@include reset-spacing;
+				@include font-size("sm");
+
+				// The code block title.
+				&-title {
+					display: flex;
+					align-items: center;
+					justify-content: space-between;
+					margin: 0;
+					padding: $padding-chat-bubble-code;
+					border-radius: 6px 6px 0 0;
+
+					@include font-size("sm", 600);
+					@include color(#fff, $palette-chat-code-title);
+				}
+
+				// The code block title actions area.
+				&-actions {
+					flex: 1;
+					display: flex;
+					gap: $gap-chat-bubble-code-header;
+					align-items: center;
+					justify-content: flex-end;
+				}
+
+				// The code block title buttons
+				&-button {
+					width: $width-chat-bubble-code-header-button;
+					aspect-ratio: 1/1;
+					margin: 0;
+					padding: $padding-chat-bubble-code-header-button;
+					cursor: pointer;
+
+					@include no-outer-highlights;
+					@include color(#fff);
+
+					// The code block title button icon.
+					svg {
+						width: $width-chat-bubble-code-header-button-icon;
+						aspect-ratio: 1/1;
+
+						@include transition(filter);
+						@include color(inherit);
+					}
+
+					// The code block title button icon hover state.
+					&:hover,
+					&:focus-visible {
+
+						@include no-outer-highlights;
+						@include color(#fff);
+
+						svg {
+							filter: drop-shadow( 0 0 1px #fff );
+						}
+					}
+
+					// The code block title button icon disabled state.
+					&:disabled {
+						cursor: progress;
+
+						svg {
+
+							@include color($palette-chat-border !important);
+						}
+					}
+
+					// The code block title button active and focus state.
+					&:active,
+					&:focus {
+						background: transparent;
+
+						@include no-outer-highlights;
+					}
+				}
+
+				// The code block content.
+				&-content {
+					margin: 0;
+					padding: $padding-chat-bubble-code-content;
+					border-radius: 0 0 6px 6px;
+					overflow-x: auto;
+
+					@include color(#fff, $palette-chat-code-body);
+
+					// The code block content code tag.
+					code {
+						font-family: "Courier Prime", "Courier New", Courier, monospace;
+
+						@include reset-spacing;
+						@include font-size("sm");
+						@include color(#fff);
+					}
+				}
+			}
+
+			// The AI chat bubble accept buttons.
+			&--action {
+				cursor: pointer;
+				margin: 0;
+				padding: $padding-chat-bubble-button;
+				border: 1px solid $palette-chat-border;
+				border-radius: $max-border-radius;
+				outline: 0;
+				box-shadow: none;
+
+				@include font-size("sm");
+				@include color($palette-text-body, $palette-chat-button);
+				@include transition(color background-color, 100ms);
+
+				&:hover,
+				&:focus-visible {
+					border: 1px solid $palette-chat-border;
+					outline: 0;
+					box-shadow: none;
+
+					@include color(#fff, $palette-primary);
+				}
+			}
+
+			// Button as container for Tooltip.
+			&--shortcut {
+				display: flex;
+				flex-direction: row;
+				justify-content: center;
+				align-items: center;
+			}
+
+			// The chat bubble pagination.
+			&--pagination {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+
+				// The chat bubble pagination button.
+				button {
+					cursor: pointer;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					width: $width-chat-bubble-pagination-button;
+					aspect-ratio: 1/1;
+
+					@include reset-spacing;
+					@include no-outer-highlights;
+					@include color($palette-text-placeholder);
+
+					// The chat bubble pagination button icon.
+					svg {
+						width: $width-chat-bubble-pagination-button-icon;
+						aspect-ratio: 1/1;
+
+						@include color(inherit);
+						@include transition(color);
+					}
+
+					// The chat bubble pagination button icon hover state.
+					&:hover,
+					&:focus-visible {
+						color: $palette-text-body;
+
+						@include no-outer-highlights;
+					}
+
+					// the chat bubble pagination button icon disabled state.
+					&:disabled {
+						cursor: not-allowed;
+
+						@include color($palette-chat-border !important, transparent !important);
+					}
+				}
+
+				// The chat bubble pagination page number.
+				span {
+					min-width: $width-chat-bubble-pagination-button;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+
+					@include reset-spacing;
+					@include font-size("xs");
+					@include color($palette-text-body);
+				}
+			}
+
+			// The class added to the chat bubble to determine if it has an icon.
+			&--has-icon {
+				flex-direction: row;
+				gap: 12px;
+
+				// Add a padding to the top to match the icon height. Icon height - Text Line Heigt divide by 2.
+				.zip-ai-sidebar__chat-bubble--icon-content {
+					padding-top: calc( ($line-height-md - $line-height-sm) / 2 );
+				}
+
+				// Add a padding to the top for the loader. Don't divide by 2, as this accurately centers.
+				.zip-ai-sidebar__chat-loader {
+					height: $line-height-md;
+				}
+			}
+
+			// The Icon based classes of the chat bubble.
+			&--icon {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				width: $line-height-md;
+				height: $line-height-md;
+
+				// The content section of the icon chat bubble.
+				&-content {
+					flex: 1;
+					display: flex;
+					flex-direction: column;
+					gap: 12px;
+				}
+			}
+
+			// The Error Bubble Type class that's added to the chat bubble.
+			&--type-error,
+			&--type-assemble-error {
+				// The message styling for the error bubble.
+				.zip-ai-sidebar__chat-bubble--message {
+
+					@include color($palette-error-text);
+				}
+
+				// The action button styling for the error bubble.
+				.zip-ai-sidebar__chat-bubble--action {
+
+					@include reset-spacing;
+					@include no-outer-highlights;
+					@include color($palette-error, transparent);
+					@include font-size("sm", 600);
+					@include transition(color);
+
+					&:hover,
+					&:focus-visible {
+
+						@include no-outer-highlights;
+						@include color($palette-error-text);
+					}
+				}
+
+				// The icon styling for the error bubble.
+				.zip-ai-sidebar__chat-bubble--icon {
+					background-color: $palette-error;
+					border-radius: 100%;
+				}
+			}
+		}
+
+		// The chat bubble editor.
+		&__chat-editor {
+			display: flex;
+			flex-direction: column;
+			gap: $gap-chat-bubble-edit-mode;
+
+			// The chat bubble editor input.
+			textarea.zip-ai-sidebar__chat-editor--input {
+				padding: $padding-chat-bubble-edit-mode-input;
+				resize: none;
+				overflow-y: auto;
+				height: $line-height-sm;
+
+				@include font-size("sm");
+				@include color($palette-text-body);
+				@include no-outer-highlights;
+				@include transition(height, 0s);
+
+				// Firefox scrollbar styles.
+				scrollbar-width: none;
+
+				// Chrome, Edge and Safari scrollbar dimensions.
+				&::-webkit-scrollbar {
+					width: 0;
+				}
+
+				// The chat bubble editor input active state.
+				&:active,
+				&:focus,
+				&:focus-visible {
+
+					@include no-outer-highlights;
+				}
+			}
+
+			// The footer of the chat editor.
+			&--footer {
+				display: flex;
+				gap: $gap-chat-bubble-edit-mode-footer;
+			}
+
+			// The chat button editor info.
+			&--info {
+				display: flex;
+				align-items: flex-start;
+				justify-content: flex-start;
+				gap: $gap-chat-bubble-edit-mode-notice;
+				margin: 0;
+				padding: $padding-chat-bubble-edit-mode-notice;
+				border: 1px solid $palette-warning;
+				border-radius: 8px;
+				outline: 0;
+				box-shadow: none;
+
+				@include font-size("xxs");
+				@include color($palette-warning-text, $palette-warning-background);
+			}
+
+			// The chat button editor actions.
+			&--actions {
+				display: flex;
+				justify-content: flex-start;
+				align-items: center;
+				gap: $gap-chat-bubble-edit-mode-actions;
+
+				// The chat button editor action buttons.
+				button {
+					cursor: pointer;
+					margin: 0;
+					padding: $padding-chat-bubble-edit-mode-actions;
+					border-radius: $max-border-radius;
+
+					@include no-outer-highlights;
+					@include font-size("sm", 500);
+					@include color($palette-text-body, #fff);
+					@include transition(color background-color);
+
+					// The chat bubble editor action focus states.
+					&:hover,
+					&:focus,
+					&:focus-visible {
+
+						@include no-outer-highlights;
+						@include color($palette-text-body, $palette-chat-border);
+					}
+
+					// The chat button editor action primary variant.
+					&.zip-ai-sidebar__chat-editor--action-primary {
+
+						@include color(#fff, $palette-text-body);
+
+						// The chat bubble editor action focus states.
+						&:hover,
+						&:focus,
+						&:focus-visible {
+
+							@include color(#fff, $palette-text-heading);
+						}
+						// The disabled primary action button.
+						&:disabled {
+							cursor: not-allowed;
+
+							@include color($palette-chat-bubble-human-color !important, $palette-label-icon !important);
+						}
+					}
+				}
+			}
+		}
+
+		// The chat loader. The SCSS definition does not use the common &__chat- from above for readability.
+		&__chat-loader {
+			position: relative;
+			top: -2px;
+			display: flex;
+			align-items: center;
+			gap: 6px;
+			animation: chatBubble 150ms 150ms 1 ease none;
+
+			// The dots in the chat loader.
+			&--dot {
+				position: relative;
+				width: 6px;
+				height: 6px;
+				border-radius: $max-border-radius;
+				background-color: $palette-text-placeholder;
+				opacity: 0.5;
+				animation: jump 1500ms infinite ease-out both;
+
+				// Set the delay for dot 2.
+				&.dot-2 {
+					animation-delay: 150ms;
+				}
+
+				// Set the delay for dot 3.
+				&.dot-3 {
+					animation-delay: 300ms;
+				}
+			}
+		}
+
+		// The content generation section.
+		&__input-prompt {
+			width: $size-full;
+			background-color: #fff;
+			display: flex;
+			flex-direction: column;
+			padding: $padding-interactions $padding-interactions 0;
+			gap: $gap-interactions;
+			position: relative;
+			z-index: $z-index-input-area;
+
+			// The wrapper of the text-area.
+			&--textarea-wrapper {
+				display: flex;
+			}
+
+			// The textarea that holds the prompt message.
+			textarea.zip-ai-sidebar__input-prompt--text {
+				position: relative;
+				width: $size-full;
+				top: 0;
+				padding: $padding-interactions-input;
+				// This border hack is to ensure that the textarea doesn't overflow into the area reserved for the buttons.
+				border: none;
+				border-bottom-width: $textarea-border-bottom;
+				border-bottom-style: solid;
+				border-bottom-color: #fff;
+				outline: 2px solid $palette-chat-border;
+				outline-offset: -2px;
+				resize: none;
+				overflow-y: auto;
+				border-radius: 6px;
+				text-align: left;
+				// Max height should be 5 times the line height + the vertical padding + the bottom border.
+				max-height: calc( (5 * $line-height-sm) + (2 * $padding-interactions-input) + $textarea-border-bottom );
+
+				@include color($palette-text-body, #fff);
+				@include font-size("sm");
+				@include transition(top color outline box-shadow, 100ms);
+
+				// Firefox scrollbar styles.
+				scrollbar-width: none;
+
+				// Chrome, Edge and Safari scrollbar dimensions.
+				&::-webkit-scrollbar {
+					width: 0;
+				}
+
+				// Focus border styling.
+				&:focus,
+				&:focus-visible {
+					// top: -1px;
+					outline: 2px solid $palette-primary;
+					box-shadow: 0 8px 48px -18px rgba( 0, 0, 0, 0.25 );
+				}
+
+				// Disabled styling.
+				&:disabled {
+					cursor: not-allowed;
+
+					@include color($palette-text-placeholder);
+				}
+
+				// The placeholder styling.
+				&::placeholder {
+
+					@include color($palette-text-placeholder);
+				}
+			}
+
+			// The disclaimer text.
+			&--disclaimer {
+				width: 100%;
+				padding: 8px 8px 20px;
+				text-align: center;
+				z-index: $z-index-disclaimer;
+
+				@include font-size("xs");
+				@include color($palette-text-help);
+
+				// The link in the disclaimer.
+				a {
+					text-decoration: none;
+					border-bottom: 1px solid $palette-chat-scrollbar;
+
+					@include color($palette-text-help);
+					@include transition(border-bottom);
+
+					// The link hover and focus state.
+					&:hover,
+					&:focus-visible {
+						outline: 0;
+						border: 0;
+						box-shadow: none;
+						border-bottom: 1px solid $palette-primary;
+
+						@include color($palette-text-help);
+					}
+				}
+			}
+
+			// The buttons area of the chat input section.
+			&--footer {
+				position: absolute;
+				bottom: $padding-interactions-input;
+				width: calc( $size-full - ($padding-interactions * 2) );
+				padding: 0 $padding-interactions-input;
+				display: flex;
+				flex-direction: row-reverse;
+				justify-content: space-between;
+				align-items: center;
+				gap: $gap-interactions-footer;
+			}
+
+			// The button in the prompt area. Expanded for specificity.
+			button.zip-ai-sidebar__input-prompt--button {
+				cursor: pointer;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				box-sizing: border-box;
+				width: $width-interactions-input-button;
+				height: $width-interactions-input-button;
+				margin: 0;
+				padding: $padding-interactions-input-button;
+				border-radius: 4px;
+				border: 1px solid $palette-primary;
+				outline: 0;
+				box-shadow: none;
+
+				@include font-size("sm");
+				@include color(#fff, $palette-primary);
+				@include transition(background-color opacity, 100ms);
+
+				// The Secondary Variant.
+				&.secondary-variant {
+					border-color: $palette-label-border;
+
+					@include color($palette-text-heading, #fff);
+					@include transition(border, 100ms);
+
+					svg {
+
+						@include color(inherit);
+					}
+
+					&:hover,
+					&:focus-visible {
+						border: 1px solid $palette-text-body;
+						outline: 0;
+						box-shadow: none;
+
+						@include color($palette-text-heading, #fff);
+					}
+
+					// The disabled button styling.
+					&:disabled {
+						opacity: 0.5;
+						cursor: not-allowed;
+
+						@include color($palette-primary !important, #fff !important);
+					}
+				}
+
+				&:hover,
+				&:focus-visible {
+					border: 1px solid $palette-primary;
+					outline: 0;
+					box-shadow: none;
+
+					@include color(#fff, $palette-secondary);
+				}
+
+				// The disabled button styling.
+				&:disabled {
+					opacity: 0.5;
+					cursor: not-allowed;
+				}
+
+				// Make the button icon white.
+				svg {
+
+					@include color(inherit);
+				}
+			}
+		}
+
+		// The prompt area of the sidebar.
+		&__prompt {
+			display: grid;
+			grid-template-columns: repeat( 2, 1fr );
+			gap: $gap-prompts;
+			padding: 0 $padding-prompts;
+			background: $palette-label-background;
+
+			// The prompt buttons. Expanded for specificity.
+			button.zip-ai-sidebar__prompt--button {
+				cursor: pointer;
+				border: 1px solid $palette-label-border;
+				border-radius: 6px;
+				margin: 0;
+				padding: $padding-prompts-button;
+				display: flex;
+				flex-direction: column;
+				align-items: flex-start;
+				justify-content: flex-start;
+				text-align: left;
+				box-shadow: none;
+				outline: 0;
+
+				@include font-size("xs");
+				@include color($palette-text-body, #fff);
+				@include transition(color background-color border-color, 100ms);
+
+				// The SVGs inside the labels.
+				svg {
+
+					@include color(inherit);
+				}
+
+				// The disabled label styling.
+				&:disabled {
+					opacity: 0.5;
+					cursor: progress;
+					border: 1px solid $palette-label-border !important;
+
+					@include color($palette-text-body !important, #fff !important);
+
+					// The SVGs inside the labels.
+					svg {
+
+						@include color($palette-label-icon !important);
+					}
+				}
+
+				// The hover and focus styling for the label buttons.
+				&:hover,
+				&:focus-visible {
+					outline: 0;
+					box-shadow: none;
+					border-color: $palette-primary;
+
+					@include color($palette-text-body, #fff);
+
+					// The SVGs inside the labels.
+					svg {
+
+						@include color(inherit !important);
+					}
+				}
+			}
+
+			// The headings in the prompt buttons.
+			&--heading {
+				color: $palette-text-heading;
+			}
+
+			// The subheadings in the prompt butons.
+			&--subheading {
+				color: $palette-text-placeholder;
+			}
+		}
+
+		// The tooltip styling for the chat bubble header interactions.
+		&__tooltip {
+			z-index: $z-index-10x9;
+			will-change: unset;
+			position: absolute;
+			animation: fadeIntoView 150ms 0ms 1 ease forwards;
+
+			&-positioned {
+				&--bottom {
+					// Translate it down according to the line height and the padding. These are for tooltips.
+					transform: translateY( calc( $line-height-xs + (6px * 2) ) );
+				}
+
+				&--top {
+					// Translate it up according to the line height and the padding. These are for tooltips.
+					transform: translateY( calc( 0px - $line-height-xs - (6px * 2) ) );
+				}
+
+				&--right {
+					// Translate it right according to the line height and the padding. These are for sidebar buttons.
+					transform: translateX( calc( $line-height-xl + (20px * 2) ) );
+				}
+
+				&--left {
+					// Translate it left according to the line height and the padding. These are for sidebar buttons.
+					transform: translateX( calc( 0px - $line-height-xl - (12px * 2) ) );
+				}
+			}
+
+			&--content {
+				box-sizing: border-box;
+				padding: 6px 12px;
+				color: $palette-text-heading;
+				background: #fff;
+				border-radius: 6px;
+				box-shadow: 0 4px 8px -2px rgba( 16, 24, 40, 0.1 ), 0 2px 4px -2px rgba( 16, 24, 40, 0.06 );
+				width: max-content;
+
+				@include font-size("xs");
+			}
+		}
+	}
+
+	// The React Select components in Zip AI.
+	&-select {
+		// Hide the scrollbar.
+		&__menu-list {
+			overflow-x: hidden;
+			scrollbar-width: none;
+
+			&::-webkit-scrollbar {
+				width: 0;
+			}
+
+			&::-webkit-scrollbar-track,
+			&::-webkit-scrollbar-thumb,
+			&::-webkit-scrollbar-thumb:hover {
+				background: transparent;
+			}
+		}
+
+		input {
+			max-height: 24px;
+
+			&:focus,
+			&:focus-visible {
+
+				@include no-outer-highlights;
+			}
+		}
+	}
+
+	// Error messages in Zip AI.
+	&-errors {
+		> div {
+			margin: 12px;
+			box-shadow: 0 0 3px 1px #cbbbbb;
+			border-radius: 4px;
+			padding: 14px;
+			text-align: center;
+
+			span {
+				font-family: inherit;
+
+				@include font-size("sm", 600);
+				@include color($palette-error);
+			}
+		}
+	}
+
+	// The Progress related selectors in Zip AI.
+	&__progress {
+		// The Progress Wrapper.
+		&-wrapper {
+			width: 100%;
+			display: flex;
+			flex-direction: column;
+			gap: 4px;
+			opacity: 1;
+
+			// The loading state of the progress wrapper.
+			&--loading {
+				opacity: 0.5;
+			}
+
+			// The loadded state of the progress wrapper.
+			&--loaded {
+				animation: translucentToOpaque 150ms ease-in-out 0ms 1 forwards;
+			}
+		}
+
+		// The Progress Bar in Zip AI.
+		&-bar {
+			width: 100%;
+			height: 8px;
+			border-radius: 4px;
+			overflow: hidden;
+			background-color: $palette-chat-border;
+
+			// The Bar Progression - Set the Background Color from Tailwind.
+			&--progress {
+				height: 100%;
+				border-radius: 4px;
+			}
+
+			&--low {
+				background-color: $tailwind-green-500;
+			}
+
+			&--medium {
+				background-color: $tailwind-amber-500;
+			}
+
+			&--high {
+				background-color: $tailwind-red-500;
+			}
+		}
+
+		// The details of the progress bar.
+		&-details {
+			display: flex;
+			align-items: flex-start;
+			justify-content: space-between;
+			width: 100%;
+
+			// The left side of the details.
+			&--left {
+
+				@include reset-spacing;
+				@include color($palette-text-body);
+				@include font-size("sm", 600);
+			}
+
+			// The right side of the details.
+			&--right {
+
+				@include reset-spacing;
+				@include color($palette-text-body);
+				@include font-size("sm");
+			}
+		}
+	}
+}
+
+// Styles for the error message bubble
+.zip-ai-error-bubble {
+	background-color: #fef3f2;
+	border: 1px solid #fda4af;
+	border-radius: 8px;
+	display: flex;
+	align-items: center;
+	padding: 16px;
+	gap: 16px;
+	box-shadow: 0 1px 3px rgba( 0, 0, 0, 0.1 );
+
+	&__icon {
+		flex-shrink: 0;
+		width: 32px;
+		height: 32px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background-color: #ef4444;
+		border-radius: 50%;
+		color: #fff;
+	}
+
+	&__content {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+	}
+
+	&__title {
+		margin: 0;
+		font-size: 16px;
+		font-weight: 600;
+		color: #000;
+	}
+
+	&__text {
+		margin: 0;
+		font-size: 14px;
+		color: #000;
+	}
+
+	&__buttons {
+		display: flex;
+		gap: 20px;
+		align-items: center;
+	}
+
+	&__button {
+		background-color: #5a03ef;
+		color: #fff;
+		border: none;
+		border-radius: 6px;
+		padding: 8px 16px;
+		font-size: 14px;
+		font-weight: 500;
+		cursor: pointer;
+		transition: background-color 0.2s;
+		width: 168px;
+		margin-top: 15px;
+		height: 40px;
+		line-height: normal !important;
+		text-transform: none !important;
+		&:hover {
+			background-color: #7c3aed;
+		}
+	}
+
+	&__button-dismiss {
+		border: none;
+		background: transparent;
+		height: 0;
+		cursor: pointer;
+		color: #000 !important;
+		box-shadow: none !important;
+		line-height: normal !important;
+		text-transform: none !important;
+		font-weight: 500 !important;
+		padding: 6px 0 !important;
+		font-size: 14px !important;
+
+		&:hover {
+			background-color: transparent !important;
+			color: #000 !important;
+		}
+	}
+
+	&__dismiss {
+		background: none;
+		border: none;
+		color: #374151;
+		font-size: 14px;
+		cursor: pointer;
+		text-decoration: underline;
+	}
+}
