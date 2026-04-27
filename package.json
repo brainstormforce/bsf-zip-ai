@@ -1,6 +1,6 @@
 {
 	"name": "zip_ai",
-	"version": "2.0.9",
+	"version": "2.0.10",
 	"description": "Library which interacts with SCS and provide multiple useful modules.",
 	"main": "Gruntfile.js",
 	"scripts": {
