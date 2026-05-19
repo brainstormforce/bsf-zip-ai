@@ -283,7 +283,7 @@ class Admin_Configurations {
 		$is_module_disabled = false;
 
 		// Check if the Zip AI Assistant was requested to be disabled.
-		if ( ! empty( $_POST['disable_zip_ai_assistant'] ) ) {
+		if ( ! empty( sanitize_text_field( wp_unslash( $_POST['disable_zip_ai_assistant'] ?? '' ) ) ) ) {
 			$is_module_disabled = Module::disable( 'ai_assistant' );
 		}
 

@@ -222,7 +222,7 @@ const ZipChatSidebar = ( props ) => {
 	const getUserCreditrs = () => {
 		// Create the formData for the AJAX request to get the latest credit details.
 		const zipAiCreditAjax = new FormData();
-		zipAiCreditAjax.append( 'action', 'get_fresh_credit_details' );
+		zipAiCreditAjax.append( 'action', 'zip_ai_get_fresh_credit_details' );
 		zipAiCreditAjax.append( 'nonce', zip_ai_react.ajax_nonce );
 
 		// Get the latest credit details

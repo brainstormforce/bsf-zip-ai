@@ -63,43 +63,40 @@ export const generateNewText = ( params ) => {
 
 	// Generate the new text.
 	OpenAiResponder( { userCommand: textCommand || textContent, previousMessages, useSystemMessage } ).then( ( result ) => {
-		const response = result.data;
+		const response = result;
 		setGenerating( false );
 
-		// If the generation was successful, update the message after trimming. Else post an error message.
-		if ( result.success ) {
-			if ( response.message.startsWith( '"' ) && response.message.endsWith( '"' ) ) {
-				response.message = response.message.slice( 1, -1 );
+		// Update the message after trimming.
+		if ( response.message.startsWith( '"' ) && response.message.endsWith( '"' ) ) {
+			response.message = response.message.slice( 1, -1 );
+		}
+		// If the last message ID is still correct, update it - else error dump and yeet.
+		const lastMessageId = updatedChatLog.length - 1;
+		const lastMessage = updatedChatLog[ lastMessageId ];
+		if ( currentId === lastMessage.id ) {
+			delete lastMessage.type;
+			lastMessage.message = response.message.trim();
+			// Delete the last message's animation class if required.
+			if ( lastMessage?.additionalClasses?.includes( 'animated-chat-bubble' ) ) {
+				// Delete the additional classes. In the future if more additional classes are required, this can be updated.
+				delete lastMessage.additionalClasses;
 			}
-			// If the last message ID is still correct, update it - else error dump and yeet.
-			const lastMessageId = updatedChatLog.length - 1;
-			const lastMessage = updatedChatLog[ lastMessageId ];
-			if ( currentId === lastMessage.id ) {
-				delete lastMessage.type;
-				lastMessage.message = response.message.trim();
-				// Delete the last message's animation class if required.
-				if ( lastMessage?.additionalClasses?.includes( 'animated-chat-bubble' ) ) {
-					// Delete the additional classes. In the future if more additional classes are required, this can be updated.
-					delete lastMessage.additionalClasses;
-				}
-				updatedChatLog[ lastMessageId ] = lastMessage;
-				setChatLog( [ ...updatedChatLog ] );
-			} else {
-				setAiResponseError( __( 'Something went wrong while I was generating a response.', 'zip-ai' ) );
-				setChatLog( [ ...olderChatLog ] );
-			}
-			setText( '' );
-			if ( 'function' === typeof setValidForSaving ) {
-				setValidForSaving( true );
-			}
+			updatedChatLog[ lastMessageId ] = lastMessage;
+			setChatLog( [ ...updatedChatLog ] );
 		} else {
-			setAiResponseError( response.message );
+			setAiResponseError( __( 'Something went wrong while I was generating a response.', 'zip-ai' ) );
 			setChatLog( [ ...olderChatLog ] );
+		}
+		setText( '' );
+		if ( 'function' === typeof setValidForSaving ) {
+			setValidForSaving( true );
 		}
 		// Refresh when the content generation is over.
 		setRefreshFilters( true );
-	} ).catch( () => {
+	} ).catch( ( error ) => {
 		setGenerating( false );
+		setAiResponseError( error?.message || __( 'Something went wrong', 'zip-ai' ) );
+		setChatLog( [ ...olderChatLog ] );
 	} );
 	// Refresh when the content generation has started.
 	setRefreshFilters( true );
@@ -149,27 +146,24 @@ export const regenerateText = ( params ) => {
 	setAiResponseError( '' );
 	// Regenerate the text.
 	OpenAiResponder( { userCommand: regenerationCommand, previousMessages, useSystemMessage: false } ).then( ( result ) => {
-		const response = result.data;
+		const response = result;
 		setGenerating( false );
 		setRegeneratingId( null );
-		if ( result.success ) {
-			if ( response.message.startsWith( '"' ) && response.message.endsWith( '"' ) ) {
-				response.message = response.message.slice( 1, -1 );
-			}
-			// Find the current chat bubble.
-			chatLog.forEach( ( iteratedBubble, index ) => {
-				if ( chatBubble.id === iteratedBubble.id ) {
-					delete chatLog[ index ].type;
-					chatLog[ index ].message = ( response.message.trim() );
-					chatLog[ index ].variations.push( response.message.trim() );
-					setChatLog( [ ...chatLog ] );
-				}
-			} );
-		} else {
-			setAiResponseError( response.message );
+		if ( response.message.startsWith( '"' ) && response.message.endsWith( '"' ) ) {
+			response.message = response.message.slice( 1, -1 );
 		}
-	} ).catch( () => {
+		// Find the current chat bubble.
+		chatLog.forEach( ( iteratedBubble, index ) => {
+			if ( chatBubble.id === iteratedBubble.id ) {
+				delete chatLog[ index ].type;
+				chatLog[ index ].message = ( response.message.trim() );
+				chatLog[ index ].variations.push( response.message.trim() );
+				setChatLog( [ ...chatLog ] );
+			}
+		} );
+	} ).catch( ( error ) => {
 		setGenerating( false );
 		setRegeneratingId( null );
+		setAiResponseError( error?.message || __( 'Something went wrong', 'zip-ai' ) );
 	} );
 };
