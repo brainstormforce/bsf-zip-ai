@@ -36,7 +36,7 @@ export const authorizeZipAi = ( event, data ) => {
 
 	// Create the formData for the AJAX request, with the typed in value as the search query.
 	const zipAiAuthLooper = new FormData();
-	zipAiAuthLooper.append( 'action', 'verify_zip_ai_authenticity' );
+	zipAiAuthLooper.append( 'action', 'zip_ai_verify_authenticity' );
 	zipAiAuthLooper.append( 'nonce', zip_ai_react.ajax_nonce );
 
 	// Set a counter for timeout.

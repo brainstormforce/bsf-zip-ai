@@ -103,6 +103,10 @@ class Sidebar_Configurations {
 						'use_system_message' => array(
 							'sanitize_callback' => array( $this, 'sanitize_boolean_field' ),
 						),
+						'message_array'      => array(
+							'type'              => 'array',
+							'sanitize_callback' => array( $this, 'sanitize_message_array' ),
+						),
 					),
 				),
 			)
@@ -118,6 +122,28 @@ class Sidebar_Configurations {
 	 */
 	public function sanitize_boolean_field( $value ) {
 		return wp_validate_boolean( sanitize_text_field( wp_unslash( (string) $value ) ) );
+	}
+
+	/**
+	 * Sanitize a message array by sanitizing each message's role and content.
+	 *
+	 * @since x.x.x
+	 * @param mixed $value The value to sanitize.
+	 * @return array
+	 */
+	public function sanitize_message_array( $value ) {
+		if ( ! is_array( $value ) ) {
+			return array();
+		}
+		return array_map(
+			function ( $message ) {
+				return array(
+					'role'    => isset( $message['role'] ) ? sanitize_text_field( wp_unslash( $message['role'] ) ) : '',
+					'content' => isset( $message['content'] ) ? wp_kses_post( wp_unslash( $message['content'] ) ) : '',
+				);
+			},
+			$value
+		);
 	}
 
 	/**
@@ -241,13 +267,11 @@ class Sidebar_Configurations {
 		if ( ! empty( $response['error'] ) ) {
 			// If the response has an error, handle it and report it back.
 			$message = '';
-			if ( ! empty( $response['error']['message'] ) ) { // If any error message received from OpenAI.
-				$message = $response['error']['message'];
-			} elseif ( is_string( $response['error'] ) ) {  // If any error message received from server.
-				if ( ! empty( $response['code'] && is_string( $response['code'] ) ) ) {
-					$message = $this->custom_message( $response['code'] );
-				}
-				$message = ! empty( $message ) ? $message : $response['error'];
+			if ( ! empty( $response['code'] ) && is_string( $response['code'] ) ) {
+				$message = $this->custom_message( $response['code'] );
+			}
+			if ( empty( $message ) ) {
+				$message = __( 'An error occurred while processing your request.', 'zip-ai' );
 			}
 			return new \WP_Error(
 				'ai_content_error',
